@@ -7,6 +7,7 @@ import java.util.Hashtable;
 import processing.core.PApplet;
 import processing.core.PImage;
 import vision.Database;
+import window.BorderlessWindow;
 
 import communication.Tuio;
 import communication.TuioCursor;
@@ -99,5 +100,12 @@ public class SuggestivePaint extends PApplet{
  	public int[] getPixels(){
  		return this.getPixels();
  	}
+ 	
+
+    public static void main(String args[]) {
+            SuggestivePaint app = new SuggestivePaint();
+            new BorderlessWindow(app, "Suggestive Paint");
+            app.init();
+    }
 
 } 
