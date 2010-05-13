@@ -1,6 +1,7 @@
 package main;
 
 //libraries
+import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
 
@@ -24,22 +25,34 @@ public class SuggestivePaint extends PApplet{
 	private Hashtable<Integer,TuioObject> prevObjects;
 	private boolean drawing, suggested;
 	private Database db;
-	private String suggestion;
+	private PImage suggestion;
 	
 	public void setup(){
 		
+		// flags
 		drawing = false;
 		suggested = true;
 		
+		// processing
 		this.size(WIDTH,HEIGHT);
 		this.smooth();
 		this.background(255);
 		
+		// tuio
 		tuio = new Tuio(3333);
 		
-		// vision stuff
-		
+		// vision
 		db = new Database();
+		String[] filenames = this.listFileNames(this.sketchPath+"/img");
+		System.out.println(filenames.length);
+		for (int i = 0; i < filenames.length; i++) {
+			if(filenames[i].contains("jpg")){
+				System.out.println("img/"+filenames[i]);
+				PImage aux = this.loadImage("img/"+filenames[i]);
+				db.addImage(aux, filenames[i]);
+			}
+		}
+		suggestion = new PImage(this.width,this.height);
 		
 	}
  
@@ -52,6 +65,7 @@ public class SuggestivePaint extends PApplet{
  		Hashtable<Integer,TuioCursor> cursors = tuio.getCursors();
  		this.fill(0);
  		for( eCur = cursors.elements() ; eCur.hasMoreElements() ; ) {
+ 			if(drawing == false) removeSuggestion();
  			drawing = true;
  			suggested = false;
  			auxCur = eCur.nextElement();
@@ -69,6 +83,7 @@ public class SuggestivePaint extends PApplet{
  		Hashtable<Integer,TuioObject> objects = tuio.getObjects();
  		this.fill(255);
  		for( eObj = objects.elements() ; eObj.hasMoreElements() ; ) {
+ 			if(drawing == false) removeSuggestion();
  			drawing = true;
  			suggested = false;
  			auxObj = eObj.nextElement();
@@ -84,7 +99,8 @@ public class SuggestivePaint extends PApplet{
  		if(!suggested && !drawing) {
  			suggested = true;
  			// vision stuff
- 			suggestion = db.findImage(this.get());
+ 			suggestion = loadImage("img/"+db.findImage(this.get()));
+ 			makeSuggestion();
  		}
  	
  	}
@@ -92,12 +108,44 @@ public class SuggestivePaint extends PApplet{
  	public void keyPressed() {
  		if(key == 'S' || key == 's'){
  			PImage screen = this.get();
- 			screen.save("img"+Math.round(Math.random()*10000)+".jpg");
+ 			screen.save("img/img"+Math.round(Math.random()*10000)+".jpg");
+ 		}
+ 		if(key == 'B' || key == 'b'){
+ 			this.background(255);
  		}
  	}
  	
  	public int[] getPixels(){
  		return this.getPixels();
  	}
+ 	
+ 	private String[] listFileNames(String dir) {
+ 		
+ 		File file = new File(dir);
+ 		
+ 		if (file.isDirectory()) {
+ 			String names[] = file.list();
+ 			return names;
+ 		} else return null;
+ 		
+ 	}
+ 	
+ 	private void makeSuggestion(){
+ 		suggestion.loadPixels();
+ 		this.loadPixels();
+ 		for ( int i = 0 ; i < this.height ; i++ ) for ( int j = 0 ; j < this.width ; j++ ) 
+ 			if(suggestion.pixels[i*height+j] == this.color(0) && this.pixels[i*height+j] == color(255))
+ 				this.pixels[i*height+j] = color(100,50,50);
+ 		this.updatePixels();	
+ 	}
+ 	
+ 	private void removeSuggestion(){
+ 		this.loadPixels();
+ 		for ( int i = 0 ; i < this.height ; i++ ) for ( int j = 0 ; j < this.width ; j++ )
+ 			if(this.pixels[i*height+j] == color(100,50,50))
+ 				this.pixels[i*height+j] = color(255,255,255);
+ 		this.updatePixels();	
+ 	}
+
 
 } 
