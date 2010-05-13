@@ -116,9 +116,10 @@ public class SuggestivePaint extends PApplet{
  			System.out.println("suggestion!!");
  			suggested = true;
  			// vision stuff
- 			if(folder == "img") suggestion = loadImage(folder+"/"+dbImg.findImage(this.get()));
- 			else if(folder == "alt") suggestion = loadImage(folder+"/"+dbAlt.findImage(this.get()));
- 			System.out.println(dbAlt.findImage(this.get()));
+ 			String path = "";
+ 			if(folder == "img") path = dbImg.findImage(this.get());
+ 			else if(folder == "alt") path = dbAlt.findImage(this.get());
+ 			if(path != null && path != null) suggestion = loadImage(folder+"/"+path);
  			makeSuggestion();
  		}
  	
