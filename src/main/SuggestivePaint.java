@@ -24,7 +24,7 @@ public class SuggestivePaint extends PApplet{
 	private Tuio tuio;
 	private Hashtable<Integer,TuioCursor> prevCursors;
 	private Hashtable<Integer,TuioObject> prevObjects;
-	private boolean drawing, suggested;
+	private boolean drawing, suggested, mute;
 	private Database dbImg;
 	private Database dbAlt;
 	private PImage suggestion;
@@ -35,6 +35,7 @@ public class SuggestivePaint extends PApplet{
 		// flags
 		drawing = false;
 		suggested = true;
+		mute = false;
 		
 		// processing
 		this.size(WIDTH,HEIGHT);
@@ -96,6 +97,7 @@ public class SuggestivePaint extends PApplet{
  		TuioObject auxObj;
  		Hashtable<Integer,TuioObject> objects = tuio.getObjects();
  		this.fill(255);
+ 		this.noStroke();
  		for( eObj = objects.elements() ; eObj.hasMoreElements() ; ) {
  			if(drawing == false) removeSuggestion();
  			drawing = true;
@@ -129,6 +131,17 @@ public class SuggestivePaint extends PApplet{
  		}
  		if(key == 'B' || key == 'b'){
  			this.background(255);
+ 		}
+ 		if(key == 'N' || key == 'n'){
+ 			if(mute){
+ 				mute = true;
+ 				removeSuggestion();
+ 			}
+ 			else {
+ 				makeSuggestion();
+ 				mute = true;
+ 			}
+ 			
  		}
  		if(key == '1'){
  			removeSuggestion();
