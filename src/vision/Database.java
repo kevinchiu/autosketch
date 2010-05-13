@@ -59,7 +59,7 @@ public class Database {
 		ArrayList<Double> av = a.getValues();
 		ArrayList<Double> bv = b.getValues();
 		for (int i = 0; i < av.size(); i++)
-			difference += Math.abs(av.get(i) - bv.get(i));
+			difference += Math.abs(av.get(i)*av.get(i) - bv.get(i)*av.get(i));
 		return difference;
 	}
 }
