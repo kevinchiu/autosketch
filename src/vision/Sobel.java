@@ -2,7 +2,6 @@ package vision;
 
 import java.util.ArrayList;
 
-import main.SuggestivePaint;
 import processing.core.PImage;
 
 public class Sobel {
