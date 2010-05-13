@@ -19,7 +19,12 @@ public class Database {
 
 	public void addImage(PImage img, String filename){
 		Signature sig = new Signature(img);
-		dictionary.put(sig, filename);
+		saveSignature(sig, filename);
+	}
+	
+	public void removeImage(PImage img){
+		Signature sig = new Signature(img);
+		removeSignature(sig);
 	}
 
 	/*
@@ -28,9 +33,9 @@ public class Database {
 	
 	private String findBest(Signature s) {
 		// iterate through whole collection and find nearest match
+		// fails if db is empty
 		float error = Float.MAX_VALUE;
-		Signature best = null; // will be a problem if there are no sigs
-		String toReturn = "FAIL";
+		Signature best = null; 
 		for (Signature sig : dictionary.keySet()) {
 			float localError = diff(sig, s);
 			if (localError < error) {
@@ -40,6 +45,7 @@ public class Database {
 		}
 		return dictionary.get(best);
 	}
+	
 	private void saveSignature(Signature s, String filename) {
 		dictionary.put(s, filename);
 	}

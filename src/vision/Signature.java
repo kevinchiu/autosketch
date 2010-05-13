@@ -7,11 +7,13 @@ import java.util.ArrayList;
 
 import processing.core.PImage;
 
+
 public class Signature {
 	ArrayList<Double> values;
+	private static int CELLS = 10;
 
 	public Signature(PImage img) {
-		values = Sobel.processImage(img, 10); // cells
+		values = Sobel.processImage(img, CELLS); // cells
 	}
 
 	public boolean equals(Object o) {
@@ -29,4 +31,16 @@ public class Signature {
 		return values;
 	}
 
+	public String toString(){
+		String toReturn = "\n";
+		
+		for (int i = 0; i < CELLS; i++) {
+			for (int j = 0; j < CELLS; j++) {
+				toReturn += values.get(i * CELLS + j);
+			}
+			toReturn += '\n';
+		}
+		
+		return toReturn;
+	}
 }
