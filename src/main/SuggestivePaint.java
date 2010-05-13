@@ -27,6 +27,7 @@ public class SuggestivePaint extends PApplet{
 	private boolean drawing, suggested;
 	private Database db;
 	private PImage suggestion;
+	private String folder;
 	
 	public void setup(){
 		
@@ -42,14 +43,15 @@ public class SuggestivePaint extends PApplet{
 		// tuio
 		tuio = new Tuio(3333);
 		
+		//database management
+		folder = "img";
+		
 		// vision
 		db = new Database();
-		String[] filenames = this.listFileNames(this.sketchPath+"/img");
-		System.out.println(filenames.length);
+		String[] filenames = this.listFileNames(this.sketchPath+"/"+folder);
 		for (int i = 0; i < filenames.length; i++) {
 			if(filenames[i].contains("jpg")){
-				System.out.println("img/"+filenames[i]);
-				PImage aux = this.loadImage("img/"+filenames[i]);
+				PImage aux = this.loadImage(folder+"/"+filenames[i]);
 				db.addImage(aux, filenames[i]);
 			}
 		}
@@ -100,7 +102,7 @@ public class SuggestivePaint extends PApplet{
  		if(!suggested && !drawing) {
  			suggested = true;
  			// vision stuff
- 			suggestion = loadImage("img/"+db.findImage(this.get()));
+ 			suggestion = loadImage(folder+"/"+db.findImage(this.get()));
  			makeSuggestion();
  		}
  	
@@ -109,11 +111,26 @@ public class SuggestivePaint extends PApplet{
  	public void keyPressed() {
  		if(key == 'S' || key == 's'){
  			PImage screen = this.get();
- 			screen.save("img/img"+Math.round(Math.random()*10000)+".jpg");
+ 			screen.save(folder+"/img"+Math.round(Math.random()*10000)+".jpg");
  		}
  		if(key == 'B' || key == 'b'){
  			this.background(255);
  		}
+ 		if(key == '1'){
+ 			removeSuggestion();
+ 			folder="img";
+ 			suggestion = new PImage(this.width,this.height);
+ 			drawing = false;
+ 			suggested = true;
+ 		}
+ 		if(key == '2'){
+ 			removeSuggestion();
+ 			folder="alt";
+ 			suggestion = new PImage(this.width,this.height);
+ 			drawing = false;
+ 			suggested = true;
+ 		}
+ 		
  	}
  	
  	public int[] getPixels(){
