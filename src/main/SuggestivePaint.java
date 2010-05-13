@@ -127,19 +127,21 @@ public class SuggestivePaint extends PApplet{
  	public void keyPressed() {
  		if(key == 'S' || key == 's'){
  			PImage screen = this.get();
- 			screen.save(folder+"/img"+Math.round(Math.random()*10000)+".jpg");
+ 			String filename = folder+"/img"+Math.round(Math.random()*10000)+".jpg";
+ 			screen.save(filename);
+ 			dbImg.addImage(loadImage(filename), filename);
  		}
  		if(key == 'B' || key == 'b'){
  			this.background(255);
  		}
- 		if(key == 'N' || key == 'n'){
- 			if(mute){
+ 		if(key == 'M' || key == 'm'){
+ 			if(!mute){
  				mute = true;
  				removeSuggestion();
  			}
  			else {
  				makeSuggestion();
- 				mute = true;
+ 				mute = false;
  			}
  			
  		}
