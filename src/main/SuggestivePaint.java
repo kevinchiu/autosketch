@@ -25,7 +25,8 @@ public class SuggestivePaint extends PApplet{
 	private Hashtable<Integer,TuioCursor> prevCursors;
 	private Hashtable<Integer,TuioObject> prevObjects;
 	private boolean drawing, suggested;
-	private Database db;
+	private Database dbImg;
+	private Database dbAlt;
 	private PImage suggestion;
 	private String folder;
 	
@@ -47,14 +48,24 @@ public class SuggestivePaint extends PApplet{
 		folder = "img";
 		
 		// vision
-		db = new Database();
-		String[] filenames = this.listFileNames(this.sketchPath+"/"+folder);
+		dbImg = new Database();
+		dbAlt = new Database();
+		String[] filenames;
+		filenames = this.listFileNames(this.sketchPath+"/img");
 		for (int i = 0; i < filenames.length; i++) {
 			if(filenames[i].contains("jpg")){
-				PImage aux = this.loadImage(folder+"/"+filenames[i]);
-				db.addImage(aux, filenames[i]);
+				PImage aux = this.loadImage("img/"+filenames[i]);
+				dbImg.addImage(aux, filenames[i]);
 			}
 		}
+		filenames = this.listFileNames(this.sketchPath+"/alt");
+		for (int i = 0; i < filenames.length; i++) {
+			if(filenames[i].contains("jpg")){
+				PImage aux = this.loadImage("alt/"+filenames[i]);
+				dbAlt.addImage(aux, filenames[i]);
+			}
+		}
+		System.out.println(dbAlt);
 		suggestion = new PImage(this.width,this.height);
 		
 	}
@@ -100,9 +111,12 @@ public class SuggestivePaint extends PApplet{
  		prevObjects = tuio.getObjects();
  		
  		if(!suggested && !drawing) {
+ 			System.out.println("suggestion!!");
  			suggested = true;
  			// vision stuff
- 			suggestion = loadImage(folder+"/"+db.findImage(this.get()));
+ 			if(folder == "img") suggestion = loadImage(folder+"/"+dbImg.findImage(this.get()));
+ 			else if(folder == "alt") suggestion = loadImage(folder+"/"+dbAlt.findImage(this.get()));
+ 			System.out.println(dbAlt.findImage(this.get()));
  			makeSuggestion();
  		}
  	

@@ -62,4 +62,12 @@ public class Database {
 			difference += Math.abs(av.get(i)*av.get(i) - bv.get(i)*av.get(i));
 		return difference;
 	}
+	
+	public String toString(){
+		String toReturn = "";
+		for (Signature sig : dictionary.keySet()) {
+			toReturn += sig.toString() + "\n";
+		}
+		return toReturn;
+	}
 }
